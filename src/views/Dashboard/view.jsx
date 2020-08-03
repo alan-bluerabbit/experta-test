@@ -15,69 +15,91 @@ import Copyright from '../../Components/Copyright'
 import ProviderDialog from '../../Components/ProviderDialog';
 import CreateDialog from '../../Components/CreateDialog';
 
+import { useStore } from '../../helpers/store'
+
 import useStyles from './styles.js';
+import DeleteDialog from '../../Components/DeleteDialog';
 
 function Dashboard() {
-		const [providerOpen, setProviderOpen] = React.useState(false);
-		const [newProviderOpen, setNewProviderOpen] = React.useState(false);
-		const [selectedProvider, setSelectedProvider] = React.useState({})
+	const { state, dispatch } = useStore()
+	const [providerOpen, setProviderOpen] = React.useState(false);
+	const [newProviderOpen, setNewProviderOpen] = React.useState(false);
+	const [deleteProviderOpen, setDeleteProviderOpen] = React.useState(false);
+	const [selectedProvider, setSelectedProvider] = React.useState({})
 
-    const classes = useStyles();
-		
-		const handleProviderOpen = (provider) => {
-			setSelectedProvider(provider)
-			setProviderOpen(true);
-		};
+	const classes = useStyles();
 	
-		const handleProviderClose = () => {
-			setSelectedProvider({})
-			setProviderOpen(false);
-		};
+	const handleProviderOpen = (provider) => {
+		setSelectedProvider(provider)
+		setProviderOpen(true);
+	};
 
-		const handleNewProviderOpen = () => {
-			setNewProviderOpen(true);
-		};
-	
-		const handleNewProviderClose = () => {
-			setNewProviderOpen(false);
-		};
+	const handleProviderClose = () => {
+		setSelectedProvider({})
+		setProviderOpen(false);
+	};
 
-		const handleDeleteProvider = (provider) => {
-			console.log('delete')
-		}
+	const handleNewProviderOpen = () => {
+		setNewProviderOpen(true);
+	};
 
-    return (
-        <div className={classes.root}>
-            <CssBaseline />
-            <AppBar position="absolute" className={classes.appBar}>
-							<Toolbar className={classes.toolbar}>
-									<Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-										Experta Seguros
-									</Typography>
-									<IconButton color="inherit" onClick={handleNewProviderOpen}>
-										<AddIcon />
-									</IconButton>
-							</Toolbar>
-            </AppBar>
-            <main className={classes.content}>
-            <div className={classes.appBarSpacer} />
-            <Container maxWidth="lg" className={classes.container}>
-                <Grid container spacing={3}>
-                  <Grid item xs={12}>
-                      <Paper className={classes.paper}>
-                      <Providers openProviderDialog={handleProviderOpen} deleteProvider={handleDeleteProvider}/>
-                      </Paper>
-                  </Grid>
-                </Grid>
-                <Box pt={4}>
-                  <Copyright />
-                </Box>
-            </Container>
-            </main>
-						<ProviderDialog provider={selectedProvider} open={providerOpen} handleClose={handleProviderClose} />
-						<CreateDialog open={newProviderOpen} handleClose={handleNewProviderClose} />
-        </div>
-    );
+	const handleNewProviderClose = () => {
+		setNewProviderOpen(false);
+	};
+
+	const handleDeleteProviderOpen = (provider) => {
+		setSelectedProvider(provider)
+		setDeleteProviderOpen(true);
+	};
+
+	const handleDeleteProviderClose = () => {
+		setSelectedProvider({})
+		setDeleteProviderOpen(false);
+	};
+
+	const handleDeleteProvider = () => {
+		dispatch({type: "remove", provider: selectedProvider})
+		setDeleteProviderOpen(false);
+	}
+
+	const handleAddProvider = (provider) => {
+		dispatch({type: "add", provider})
+		setNewProviderOpen(false)
+	}
+
+	return (
+		<div className={classes.root}>
+			<CssBaseline />
+			<AppBar position="absolute" className={classes.appBar}>
+				<Toolbar className={classes.toolbar}>
+						<Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
+							Experta Seguros
+						</Typography>
+						<IconButton color="inherit" onClick={handleNewProviderOpen}>
+							<AddIcon />
+						</IconButton>
+				</Toolbar>
+			</AppBar>
+			<main className={classes.content}>
+			<div className={classes.appBarSpacer} />
+			<Container maxWidth="lg" className={classes.container}>
+					<Grid container spacing={3}>
+						<Grid item xs={12}>
+								<Paper className={classes.paper}>
+								<Providers providers={state.providers} openProviderDialog={handleProviderOpen} deleteProvider={handleDeleteProviderOpen}/>
+								</Paper>
+						</Grid>
+					</Grid>
+					<Box pt={4}>
+						<Copyright />
+					</Box>
+			</Container>
+			</main>
+			<ProviderDialog provider={selectedProvider} open={providerOpen} handleClose={handleProviderClose} />
+			<CreateDialog open={newProviderOpen} handleClose={handleNewProviderClose} addProvider={handleAddProvider}/>
+			<DeleteDialog open={deleteProviderOpen} handleClose={handleDeleteProviderClose} deleteProvider={handleDeleteProvider} />
+		</div>
+	);
 }
 
 export default Dashboard;

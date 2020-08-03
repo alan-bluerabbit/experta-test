@@ -12,8 +12,6 @@ import PersonIcon from '@material-ui/icons/Person';
 import Title from './Title';
 import Colors from '../Constants/Colors';
 
-import MockData from '../Constants/mockData';
-
 function preventDefault(event) {
   event.preventDefault();
 }
@@ -39,7 +37,7 @@ export default function Providers(props) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {MockData.map((row) => (
+          {props.providers.map((row) => (
             <TableRow key={row.id}>
               <TableCell>{row.name}</TableCell>
               <TableCell>{row.cuit}</TableCell>
@@ -50,7 +48,7 @@ export default function Providers(props) {
                     style={{ color: Colors.primary.editColor }}
                   />
                 </Button>
-                <Button onClick={props.deleteProvider}>
+                <Button onClick={() => props.deleteProvider(row)}>
                   <DeleteIcon
                     style={{ color: Colors.primary.editColor }}
                   />
