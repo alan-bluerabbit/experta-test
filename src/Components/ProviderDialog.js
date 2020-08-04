@@ -3,6 +3,36 @@ import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button } 
 
 const ProviderDialog = (props) => {
     const provider = props.provider
+    const nameRef = React.useRef()
+    const cuitRef = React.useRef()
+    const addressRef = React.useRef()
+    const phoneRef = React.useRef()
+    const mailRef = React.useRef()
+    const [nameError, setNameError] = React.useState(false)
+    const [cuitError, setCuitError] = React.useState(false)
+    const [addressError, setAddressError] = React.useState(false)
+    const [phoneError, setPhoneError] = React.useState(false)
+    const [mailError, setMailError] = React.useState(false)
+
+    const editProvider = () => {
+        const updatedProvider = {
+            id: provider.id,
+            name: nameRef.current.value,
+            cuit: cuitRef.current.value,
+            address: addressRef.current.value,
+            phone: phoneRef.current.value,
+            mail: mailRef.current.value,
+            resinc: false
+        }
+        if (validateFormat(updatedProvider)) {
+            props.editProvider(updatedProvider)
+        }
+    }
+
+    const validateFormat = (provider) => {
+        return true
+    }
+
     return(
         <Dialog open={props.open} onClose={props.handleClose}>
             <DialogTitle id="form-dialog-title">Información del proveedor</DialogTitle>
@@ -14,6 +44,7 @@ const ProviderDialog = (props) => {
                     label="Nombre"
                     type="email"
                     defaultValue={provider.name}
+                    inputRef={nameRef}
                     fullWidth
                 />
                 <TextField
@@ -23,6 +54,7 @@ const ProviderDialog = (props) => {
                     label="CUIT"
                     type="email"
                     defaultValue={provider.cuit}
+                    inputRef={cuitRef}
                     fullWidth
                 />
                 <TextField
@@ -32,6 +64,7 @@ const ProviderDialog = (props) => {
                     label="Dirección"
                     type="email"
                     defaultValue={provider.address}
+                    inputRef={addressRef}
                     fullWidth
                 />
                 <TextField
@@ -41,6 +74,7 @@ const ProviderDialog = (props) => {
                     label="Teléfono"
                     type="email"
                     defaultValue={provider.phone}
+                    inputRef={phoneRef}
                     fullWidth
                 />
                 <TextField
@@ -50,6 +84,7 @@ const ProviderDialog = (props) => {
                     label="Correo electrónico"
                     type="email"
                     defaultValue={provider.mail}
+                    inputRef={mailRef}
                     fullWidth
                 />
             </DialogContent>
@@ -57,7 +92,7 @@ const ProviderDialog = (props) => {
             <Button onClick={props.handleClose} color="primary">
                 Cancelar
             </Button>
-            <Button onClick={props.handleClose} color="primary">
+            <Button onClick={editProvider} color="primary">
                 Editar
             </Button>
             </DialogActions>

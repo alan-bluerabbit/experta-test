@@ -14,11 +14,12 @@ import Providers from '../../Components/Providers';
 import Copyright from '../../Components/Copyright'
 import ProviderDialog from '../../Components/ProviderDialog';
 import CreateDialog from '../../Components/CreateDialog';
+import DeleteDialog from '../../Components/DeleteDialog';
 
+import providersSync from '../../helpers/providersSync';
 import { useStore } from '../../helpers/store'
 
 import useStyles from './styles.js';
-import DeleteDialog from '../../Components/DeleteDialog';
 
 function Dashboard() {
 	const { state, dispatch } = useStore()
@@ -26,8 +27,16 @@ function Dashboard() {
 	const [newProviderOpen, setNewProviderOpen] = React.useState(false);
 	const [deleteProviderOpen, setDeleteProviderOpen] = React.useState(false);
 	const [selectedProvider, setSelectedProvider] = React.useState({})
+	React.useEffect(() => {
+		getAllProviders()
+	}, [])
 
 	const classes = useStyles();
+
+	const getAllProviders = async () => {
+		const providers = await providersSync.getAllProviders()
+		dispatch({type: 'load', providers})
+	}
 	
 	const handleProviderOpen = (provider) => {
 		setSelectedProvider(provider)
@@ -57,14 +66,25 @@ function Dashboard() {
 		setDeleteProviderOpen(false);
 	};
 
-	const handleDeleteProvider = () => {
-		dispatch({type: "remove", provider: selectedProvider})
-		setDeleteProviderOpen(false);
+	const handleAddProvider = async (newProvider) => {
+		const checkCuit = state.providers.find(provider => provider.cuit === newProvider.cuit)
+		if (!checkCuit) {
+			await providersSync.createProvider(newProvider)
+			getAllProviders()
+			handleNewProviderClose()
+		}
 	}
 
-	const handleAddProvider = (provider) => {
-		dispatch({type: "add", provider})
-		setNewProviderOpen(false)
+	const handleEditProvider = async (updatedProvider) => {
+		await providersSync.updateProvider(updatedProvider)
+		getAllProviders()
+		handleProviderClose()
+	}
+
+	const handleDeleteProvider = async () => {
+		await providersSync.deleteProvider(selectedProvider.id)
+		getAllProviders()
+		handleDeleteProviderClose();
 	}
 
 	return (
@@ -95,7 +115,7 @@ function Dashboard() {
 					</Box>
 			</Container>
 			</main>
-			<ProviderDialog provider={selectedProvider} open={providerOpen} handleClose={handleProviderClose} />
+			<ProviderDialog provider={selectedProvider} open={providerOpen} handleClose={handleProviderClose} editProvider={handleEditProvider}/>
 			<CreateDialog open={newProviderOpen} handleClose={handleNewProviderClose} addProvider={handleAddProvider}/>
 			<DeleteDialog open={deleteProviderOpen} handleClose={handleDeleteProviderClose} deleteProvider={handleDeleteProvider} />
 		</div>

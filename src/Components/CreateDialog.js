@@ -19,7 +19,8 @@ const CreateDialog = (props) => {
             cuit: cuitRef.current.value,
             address: addressRef.current.value,
             phone: phoneRef.current.value,
-            mail: mailRef.current.value
+            mail: mailRef.current.value,
+            resinc: false
         }
         if (validateFormat(provider)) {
             props.addProvider(provider)
