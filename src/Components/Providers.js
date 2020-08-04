@@ -22,6 +22,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const formatDate = (timestamp) => {
+  const date = new Date(timestamp * 1000)
+  return date.toDateString()
+}
+
 export default function Providers(props) {
   const classes = useStyles();
   return (
@@ -41,7 +46,7 @@ export default function Providers(props) {
             <TableRow key={row.id}>
               <TableCell>{row.name}</TableCell>
               <TableCell>{row.cuit}</TableCell>
-              <TableCell>{row.date}</TableCell>
+              <TableCell>{formatDate(row.created)}</TableCell>
               <TableCell align="right">
                 <Button onClick={() => props.openProviderDialog(row)}>
                   <PersonIcon

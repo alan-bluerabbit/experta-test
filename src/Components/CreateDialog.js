@@ -1,5 +1,8 @@
 import * as React from 'react'
 import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, TextField, Button } from '@material-ui/core';
+import ToggleButton from '@material-ui/lab/ToggleButton';
+import CheckIcon from '@material-ui/icons/Check';
+import { formatHelper } from '../helpers/formatHelper';
 
 const CreateDialog = (props) => {
     const nameRef = React.useRef()
@@ -12,6 +15,7 @@ const CreateDialog = (props) => {
     const [addressError, setAddressError] = React.useState(false)
     const [phoneError, setPhoneError] = React.useState(false)
     const [mailError, setMailError] = React.useState(false)
+    const [resInc, setResInc] = React.useState(false)
 
     const addProvider = () => {
         const provider = {
@@ -20,7 +24,7 @@ const CreateDialog = (props) => {
             address: addressRef.current.value,
             phone: phoneRef.current.value,
             mail: mailRef.current.value,
-            resinc: false
+            resinc: resInc
         }
         if (validateFormat(provider)) {
             props.addProvider(provider)
@@ -28,7 +32,17 @@ const CreateDialog = (props) => {
     }
 
     const validateFormat = (provider) => {
-        return true
+        const status = formatHelper(provider)
+        setNameError(status.name)
+        setMailError(status.mail)
+        setAddressError(status.address)
+        setCuitError(status.cuit)
+        setPhoneError(status.phone)
+        if (status.name || status.mail || status.address || status.cuit || status.phone) {
+            return false
+        } else {
+            return true
+        }
     }
     return(
         <Dialog open={props.open} onClose={props.handleClose}>
@@ -45,6 +59,7 @@ const CreateDialog = (props) => {
                     type="email"
                     inputRef={nameRef}
                     fullWidth
+                    error={nameError}
                 />
                 <TextField
                     autoFocus
@@ -54,6 +69,7 @@ const CreateDialog = (props) => {
                     type="email"
                     inputRef={cuitRef}
                     fullWidth
+                    error={cuitError}
                 />
                 <TextField
                     autoFocus
@@ -63,6 +79,7 @@ const CreateDialog = (props) => {
                     type="email"
                     inputRef={addressRef}
                     fullWidth
+                    error={addressError}
                 />
                 <TextField
                     autoFocus
@@ -72,6 +89,7 @@ const CreateDialog = (props) => {
                     type="email"
                     inputRef={phoneRef}
                     fullWidth
+                    error={phoneError}
                 />
                 <TextField
                     autoFocus
@@ -81,7 +99,19 @@ const CreateDialog = (props) => {
                     type="email"
                     inputRef={mailRef}
                     fullWidth
+                    error={mailError}
                 />
+                Responsable Inscripto:
+                <ToggleButton
+                    value="check"
+                    selected={resInc}
+                    size="small"
+                    onChange={() => {
+                        setResInc(!resInc);
+                    }}
+                >
+                    <CheckIcon />
+                </ToggleButton>
             </DialogContent>
             <DialogActions>
             <Button onClick={props.handleClose} color="primary">
