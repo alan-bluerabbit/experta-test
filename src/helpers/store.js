@@ -33,3 +33,5 @@ export const StoreProvider = ({ children }) => {
 }
 
 export const useStore = () => useContext(StoreContext);
+
+export { reducer }
