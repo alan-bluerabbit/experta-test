@@ -1,3 +1,24 @@
+## Experta Seguros Examen Técnico
+
+CRUD de proveedores desarrollada en React.JS utilizando la librería de componentes de Material UI + Firebase
+
+Tests unitarios desarrollados con Jest + React Test Renderer
+
+Firebase fue la tecnología utilizada para el backend ya que provee facilidad de desarrollo y deploy, una robusta base de datos
+eficiente para este caso de uso en particular, tanto en términos de tiempo requerido para su configuración e integración con la
+aplicación, como también de velocidad de respuesta y escalabilidad automática.
+
+## Posibles Mejoras
+Utilizando Firebase Cloud Functions, la validación de formato se podría realizar desde el backend, evitando la manipulación del DOM
+desde el front, lo cual podría resultar en información errada llegando a la base de datos.
+
+Migrar la tecnología de test unitarios a enzyme, para poder aprovechar el shallow rendering y poder realizar test unitarios de
+los cuadros de diálogo, lo cual con jest puro no parece ser posible.
+
+Contemplar la posibilidad de integrar una barra lateral desplegable para agregar funcionalidad a la app.
+
+## Documentación de React Scripts
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts

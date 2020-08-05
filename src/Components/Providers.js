@@ -12,10 +12,6 @@ import PersonIcon from '@material-ui/icons/Person';
 import Title from './Title';
 import Colors from '../Constants/Colors';
 
-function preventDefault(event) {
-  event.preventDefault();
-}
-
 const useStyles = makeStyles((theme) => ({
   seeMore: {
     marginTop: theme.spacing(3),
@@ -64,8 +60,8 @@ export default function Providers(props) {
         </TableBody>
       </Table>
       <div className={classes.seeMore}>
-        <Link color="primary" href="#" onClick={preventDefault}>
-          Ver más proveedores
+        <Link color="primary" href="#" onClick={props.reload}>
+          Recargar proveedores
         </Link>
       </div>
     </React.Fragment>

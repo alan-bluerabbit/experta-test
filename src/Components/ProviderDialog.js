@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button } from '@material-ui/core';
+import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button, Typography, makeStyles } from '@material-ui/core';
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import CheckIcon from '@material-ui/icons/Check';
 import { formatHelper } from '../helpers/formatHelper';
@@ -16,7 +16,9 @@ const ProviderDialog = (props) => {
     const [addressError, setAddressError] = React.useState(false)
     const [phoneError, setPhoneError] = React.useState(false)
     const [mailError, setMailError] = React.useState(false)
-    const [resInc, setResInc] = React.useState(false)
+    const [resInc, setResInc] = React.useState(provider.resinc)
+
+    const classes = useStyles()
 
     const editProvider = () => {
         const updatedProvider = {
@@ -106,17 +108,25 @@ const ProviderDialog = (props) => {
                     fullWidth
                     error={mailError}
                 />
-                Responsable Inscripto:
-                <ToggleButton
-                    value="check"
-                    selected={resInc}
-                    size="small"
-                    onChange={() => {
-                        setResInc(!resInc);
-                    }}
-                >
-                    <CheckIcon />
-                </ToggleButton>
+                <div className={classes.resIncContainer}>
+                    <Typography variant="body2" color="textPrimary" align="center">
+                        Responsable Inscripto:
+                    </Typography>
+                    <ToggleButton
+                        classes={{
+                            root: classes.resIncCheckContainer,
+                            selected: classes.resIncCheckSelected,
+                        }}
+                        value="check"
+                        selected={resInc}
+                        size="small"
+                        onChange={() => {
+                            setResInc(!resInc);
+                        }}
+                    >
+                        <CheckIcon />
+                    </ToggleButton>
+                </div>
             </DialogContent>
             <DialogActions>
             <Button onClick={props.handleClose} color="primary">
@@ -131,3 +141,17 @@ const ProviderDialog = (props) => {
 }
 
 export default ProviderDialog
+
+const useStyles = makeStyles((theme) => ({
+    resIncContainer: {
+        alignItems: 'center',
+        display: 'flex',
+        marginTop: 20
+    },
+    resIncCheckContainer: {
+        marginLeft: 15
+    },
+    resIncCheckSelected: {
+        background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
+    }
+}));

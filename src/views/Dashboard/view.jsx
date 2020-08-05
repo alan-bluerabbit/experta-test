@@ -67,12 +67,9 @@ function Dashboard() {
 	};
 
 	const handleAddProvider = async (newProvider) => {
-		const checkCuit = state.providers.find(provider => provider.cuit === newProvider.cuit)
-		if (!checkCuit) {
-			await providersSync.createProvider(newProvider)
-			getAllProviders()
-			handleNewProviderClose()
-		}
+		await providersSync.createProvider(newProvider)
+		getAllProviders()
+		handleNewProviderClose()
 	}
 
 	const handleEditProvider = async (updatedProvider) => {
@@ -106,7 +103,12 @@ function Dashboard() {
 					<Grid container spacing={3}>
 						<Grid item xs={12}>
 								<Paper className={classes.paper}>
-								<Providers providers={state.providers} openProviderDialog={handleProviderOpen} deleteProvider={handleDeleteProviderOpen}/>
+								<Providers
+									providers={state.providers}
+									openProviderDialog={handleProviderOpen}
+									deleteProvider={handleDeleteProviderOpen}
+									reload={getAllProviders}
+								/>
 								</Paper>
 						</Grid>
 					</Grid>

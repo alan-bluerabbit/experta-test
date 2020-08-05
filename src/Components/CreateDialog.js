@@ -1,8 +1,10 @@
 import * as React from 'react'
-import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, TextField, Button } from '@material-ui/core';
+import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, TextField, Button, Typography } from '@material-ui/core';
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import CheckIcon from '@material-ui/icons/Check';
+import { makeStyles } from '@material-ui/core/styles';
 import { formatHelper } from '../helpers/formatHelper';
+import { useStore } from '../helpers/store';
 
 const CreateDialog = (props) => {
     const nameRef = React.useRef()
@@ -16,6 +18,9 @@ const CreateDialog = (props) => {
     const [phoneError, setPhoneError] = React.useState(false)
     const [mailError, setMailError] = React.useState(false)
     const [resInc, setResInc] = React.useState(false)
+    const { state } = useStore()
+
+    const classes = useStyles()
 
     const addProvider = () => {
         const provider = {
@@ -31,14 +36,23 @@ const CreateDialog = (props) => {
         }
     }
 
+    const isUniqueCuit = (cuit) => {
+        const checkCuit = state.providers.find(provider => provider.cuit === cuit)
+        if (!checkCuit) {
+            return true
+        }
+        return false
+    }
+    
+
     const validateFormat = (provider) => {
         const status = formatHelper(provider)
         setNameError(status.name)
         setMailError(status.mail)
         setAddressError(status.address)
-        setCuitError(status.cuit)
+        setCuitError(status.cuit || !isUniqueCuit(provider.cuit))
         setPhoneError(status.phone)
-        if (status.name || status.mail || status.address || status.cuit || status.phone) {
+        if (status.name || status.mail || status.address || status.cuit || !isUniqueCuit(provider.cuit) || status.phone) {
             return false
         } else {
             return true
@@ -101,17 +115,25 @@ const CreateDialog = (props) => {
                     fullWidth
                     error={mailError}
                 />
-                Responsable Inscripto:
-                <ToggleButton
-                    value="check"
-                    selected={resInc}
-                    size="small"
-                    onChange={() => {
-                        setResInc(!resInc);
-                    }}
-                >
-                    <CheckIcon />
-                </ToggleButton>
+                <div className={classes.resIncContainer}>
+                    <Typography variant="body2" color="textPrimary" align="center">
+                        Responsable Inscripto:
+                    </Typography>
+                    <ToggleButton
+                        classes={{
+                            root: classes.resIncCheckContainer,
+                            selected: classes.resIncCheckSelected,
+                        }}
+                        value="check"
+                        selected={resInc}
+                        size="small"
+                        onChange={() => {
+                            setResInc(!resInc);
+                        }}
+                    >
+                        <CheckIcon />
+                    </ToggleButton>
+                </div>
             </DialogContent>
             <DialogActions>
             <Button onClick={props.handleClose} color="primary">
@@ -126,3 +148,18 @@ const CreateDialog = (props) => {
 }
 
 export default CreateDialog
+
+const useStyles = makeStyles((theme) => ({
+    resIncContainer: {
+        alignItems: 'center',
+        display: 'flex',
+        marginTop: 20
+    },
+    resIncCheckContainer: {
+        marginLeft: 15
+    },
+    resIncCheckSelected: {
+        background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
+    }
+}));
+  
